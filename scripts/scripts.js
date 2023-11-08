@@ -55,7 +55,8 @@ function appendLink(path, rel, as) {
 }
 
 function preloadLCPBlock() {
-  const [name] = document.body.querySelector('main > div:first-child > div').classList;
+  const [name] = document.body.querySelectorAll('main > div:first-child > div')?.classList;
+  if (!name) return;
 
   const jsPath = `${miloLibs}/blocks/${name}/${name}.js`;
   const cssPath = `${miloLibs}/blocks/${name}/${name}.css`;
@@ -71,7 +72,7 @@ function preloadLCPBlock() {
 }());
 
 (async function loadPage() {
-  preloadLCPBlock();
+  // preloadLCPBlock();
   const { loadArea, loadDelayed, setConfig } = await import(`${miloLibs}/utils/utils.js`);
   setConfig({ ...CONFIG, miloLibs });
   await loadArea();
