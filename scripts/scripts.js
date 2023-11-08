@@ -46,6 +46,21 @@ const CONFIG = {
 
 const miloLibs = setLibs(LIBS);
 
+function preloadLCPBlocks() {
+  if (document.body.querySelector('main > div:first-child > .marquee')) {
+    const scriptPre = document.createElement('link');
+    scriptPre.href = `${miloLibs}/blocks/marquee/marquee.js`;
+    scriptPre.setAttribute('rel', 'modulepreload');
+    scriptPre.setAttribute('as', 'script');
+
+    const stylePre = document.createElement('link');
+    stylePre.href = `${miloLibs}/blocks/marquee/marquee.css`;
+    stylePre.setAttribute('rel', 'stylesheet');
+
+    document.head.append(stylePre, scriptPre);
+  }
+}
+
 (function loadStyles() {
   const paths = [`${miloLibs}/styles/styles.css`];
   if (STYLES) { paths.push(STYLES); }
@@ -58,6 +73,7 @@ const miloLibs = setLibs(LIBS);
 }());
 
 (async function loadPage() {
+  preloadLCPBlocks();
   const { loadArea, loadDelayed, setConfig } = await import(`${miloLibs}/utils/utils.js`);
 
   setConfig({ ...CONFIG, miloLibs });
