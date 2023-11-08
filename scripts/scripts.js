@@ -46,37 +46,33 @@ const CONFIG = {
 
 const miloLibs = setLibs(LIBS);
 
-function appendLink(name, rel, as) {
+function appendLink(path, rel, as) {
   const link = document.createElement('link');
-  const filename = rel === 'stylesheet' ? `${name}.css` : `${name}.js`;
-  link.href = `${miloLibs}/blocks/${name}/${filename}`;
+  link.href = path;
   link.setAttribute('rel', rel);
   if (as) link.setAttribute('as', as);
   document.head.appendChild(link);
 }
 
-function preloadLCPBlocks() {
-  if (document.body.querySelector('main > div:first-child > .marquee')) {
-    appendLink('marquee', 'modulepreload', 'script');
-    appendLink('marquee', 'stylesheet');
-  }
+function preloadLCPBlock() {
+  const [name] = document.body.querySelector('main > div:first-child > div').classList;
+
+  const jsPath = `${miloLibs}/blocks/${name}/${name}.js`;
+  const cssPath = `${miloLibs}/blocks/${name}/${name}.css`;
+
+  appendLink(jsPath, 'modulepreload', 'script');
+  appendLink(cssPath, 'stylesheet');
 }
 
 (function loadStyles() {
   const paths = [`${miloLibs}/styles/styles.css`];
   if (STYLES) { paths.push(STYLES); }
-  paths.forEach((path) => {
-    const link = document.createElement('link');
-    link.setAttribute('rel', 'stylesheet');
-    link.setAttribute('href', path);
-    document.head.appendChild(link);
-  });
+  paths.forEach((path) => { appendLink(path, 'stylesheet'); });
 }());
 
 (async function loadPage() {
-  preloadLCPBlocks();
+  preloadLCPBlock();
   const { loadArea, loadDelayed, setConfig } = await import(`${miloLibs}/utils/utils.js`);
-
   setConfig({ ...CONFIG, miloLibs });
   await loadArea();
   loadDelayed();
