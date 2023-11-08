@@ -46,18 +46,19 @@ const CONFIG = {
 
 const miloLibs = setLibs(LIBS);
 
+function appendLink(name, rel, as) {
+  const link = document.createElement('link');
+  const filename = rel === 'stylesheet' ? `${name}.css` : `${name}.js`;
+  link.href = `${miloLibs}/blocks/${name}/${filename}`;
+  link.setAttribute('rel', rel);
+  if (as) link.setAttribute('as', as);
+  document.head.appendChild(link);
+}
+
 function preloadLCPBlocks() {
   if (document.body.querySelector('main > div:first-child > .marquee')) {
-    const scriptPre = document.createElement('link');
-    scriptPre.href = `${miloLibs}/blocks/marquee/marquee.js`;
-    scriptPre.setAttribute('rel', 'modulepreload');
-    scriptPre.setAttribute('as', 'script');
-
-    const stylePre = document.createElement('link');
-    stylePre.href = `${miloLibs}/blocks/marquee/marquee.css`;
-    stylePre.setAttribute('rel', 'stylesheet');
-
-    document.head.append(stylePre, scriptPre);
+    appendLink('marquee', 'modulepreload', 'script');
+    appendLink('marquee', 'stylesheet');
   }
 }
 
